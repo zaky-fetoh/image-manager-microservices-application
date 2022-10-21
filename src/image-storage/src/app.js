@@ -1,11 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
-const path = require("path")
-const fs = require("fs")
+const path = require("path");
+const fs = require("fs");
 
 const imageSaver = require("./controller/saver");
+const IMAGE_DB = path.join(__dirname,"..","IMAGE_DB") ; 
 
-const PORT = process.env.PORT || 3000
+
+const PORT = process.env.PORT || 3000;
 
 (async () => {
     express().use(morgan())
@@ -15,11 +17,11 @@ const PORT = process.env.PORT || 3000
             ok: true,
         });
     })
-    .get("download/:imageId",(req, res, next)=>{
+    .get("/download/:imageId",(req, res, next)=>{
         const imageId = req.params.imageId;
-        const imagePath = path.join("..", "..","IMAGE_DB",imageId);
+        const imagePath = path.join(IMAGE_DB,imageId);
         if(fs.existsSync(imagePath)) return res.sendFile(imagePath);
-        res.sendFile(404).json({
+        return res.status(404).json({
             error:"Image Does Not Exist",
         })
     })
