@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  image-storage:
+    image: image-storage
+    build: 
+      context: ./image-storage
+      dockerfile: Dockerfile
+    container_name: image-storage
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - ./src/image-storage/IMAGE_DB:./IMAGE_DB:z
+    restart: "no"
+    
