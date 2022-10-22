@@ -1,3 +1,5 @@
+const path = require("path");
+const fs = require("fs");
 
 const IMAGE_DB = path.join(__dirname,"..","..","IMAGE_DB") ; 
 
