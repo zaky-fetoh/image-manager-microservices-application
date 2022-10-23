@@ -6,20 +6,21 @@ const fs = require("fs");
 
 const IMAGE_DB = path.join(__dirname,"..","..","IMAGE_DB") ; 
 
-
+//Multer Storage Spicicfication
 const diskStroage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, IMAGE_DB)
     },
     filename: (req, file, callback) => {
+        //Setting arandom unique Idfor the uploaded image
         const newFileName = uuidv4() + "." + file.mimetype.split("/")[1];
         console.log(`${file.originalname} is renamed with ${newFileName}`)
         callback(null, newFileName);
     },
-})
+});
 
 exports.SaveSingleImage = multer({
-    storage: diskStroage,
+    storage: diskStroage, //Save to storage spicified Above
     fileFilter: (req, file, callback) => {
         const fileTypes = /jpeg|jpg|png|gif/;
         const mimetype = fileTypes.test(file.mimetype);
@@ -30,6 +31,8 @@ exports.SaveSingleImage = multer({
 }).single("image");
 
 
+/** if image storedSuccessfully using multer
+ * Server will response with the file nume*/
 exports.ackWithFileName = (req, res, next) => {
     res.status(200).json({
         imageName: req.file.filename,
@@ -37,9 +40,10 @@ exports.ackWithFileName = (req, res, next) => {
     });
 };
 
-
+/**Compact Hundler for uploading the image
+ */// compling multer hundler and the response middlWare
 exports.uploadImage = express.Router()
-    .use(exports.SaveSingleImage,exports.ackWithFileName)
+    .use(exports.SaveSingleImage,exports.ackWithFileName);
 
 
 exports.downloadImage = (req, res, next)=>{
@@ -49,4 +53,4 @@ exports.downloadImage = (req, res, next)=>{
     return res.status(404).json({
         error:"Image Does Not Exist",
     })
-}
+};
