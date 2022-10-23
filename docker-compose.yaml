@@ -13,5 +13,6 @@ services:
       - PORT=3000
     volumes:
       - ./src/image-storage/IMAGE_DB:./IMAGE_DB:z
+      - ./src/image-storage/ENCR_IMAGE_DB:./ENCR_IMAGE_DB:z
     restart: "no"
     
