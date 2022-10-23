@@ -13,6 +13,10 @@ const PORT = process.env.PORT || 3000;
     }catch(e){console.log(`unable to Connect to  URI: ${MONGO_URI}`)}
 
     express().use(morgan())
+    .use(express.json(),(req, res, next)=>{
+        req.headers.authorization
+    })
+
     
     .listen(PORT,()=>{
     console.log(`SERVER is listening at ${PORT}`)

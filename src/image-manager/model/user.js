@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    pasword: {
+    password: {
         type: String,
         required: true,
     },
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 const joiUserSchema = joi.object({
     name: joi.string().min(2).max(20).required(),
     user_name: joi.string().min(3).max(7).required().alphanum(),
-    pasword: joi.string().min(7),
+    password: joi.string().min(7),
     _id: joi.any(),
 })
 
@@ -36,8 +36,8 @@ userSchema.pre("save", async function (next) {
     const RDBO = await module.exports.findOne({
         _id: this._id
     });
-    if (!RDBO || RDBO.pasword !== this.pasword)
-        this.pasword = await bcrypt.hash(this.pasword, 12);
+    if (!RDBO || RDBO.password !== this.password)
+        this.password = await bcrypt.hash(this.password, 12);
     next();
 })
 
