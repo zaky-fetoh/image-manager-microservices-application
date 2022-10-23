@@ -7,7 +7,7 @@ const ALGO = 'aes-256-cbc';
 exports.encrypt = (ReadStream, WriteStream)=>{
     const iv = crypto.randomBytes(16); 
     let cipher = crypto.createCipheriv(ALGO,
-                        Buffer.from(KEY), iv);
+                        Buffer.from(KEY,"hex"), iv);
     setImmediate(()=>{
         ReadStream.pipe(cipher).pipe(WriteStream)
     })
@@ -15,9 +15,9 @@ exports.encrypt = (ReadStream, WriteStream)=>{
 }
 
 exports.decrypt = (ReadStream, WriteStream, iv)=>{
-    iv = Buffer.from(iv);
+    iv = Buffer.from(iv, "hex");
     let decipher = crypto.createDecipheriv(ALGO,
-                        Buffer.from(KEY), iv);
+                        Buffer.from(KEY, "hex"), iv);
     ReadStream.pipe(decipher).pipe(WriteStream);
 }
 

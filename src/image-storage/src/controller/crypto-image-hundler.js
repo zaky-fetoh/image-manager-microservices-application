@@ -1,5 +1,5 @@
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 const multer = require("multer");
 const uuidv4 = require("uuid").v4;
@@ -9,7 +9,7 @@ const encrytDisk = require("./encryptDiskStorage");
 const cipher = require("./cipher");
 
 
-const ENCRDB = path.join("..","..","ENCR_IMAGE_DB");
+const ENCRDB = path.join(__dirname,"..","..","ENCR_IMAGE_DB");
 console.log(`Encryption IMAGEDB is ${ENCRDB}`);
 
 const cipherDiskStorage = encrytDisk({
@@ -58,7 +58,7 @@ exports.downloadDecrImage = (req, res, next)=>{
     if(!fs.existsSync(imagePath)) return res.status(404).json({
         ok: false, message:"File Not Exit", 
     });
-    fs.readFile(imagePath+".iv",(err,iv)=>{
+    fs.readFile(imagePath+".iv",{encoding:"hex"},(err,iv)=>{
         if(err) return res.status(500).json({
             ok:false, message: err.message,
         });
