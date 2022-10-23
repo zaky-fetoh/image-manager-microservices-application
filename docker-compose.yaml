@@ -12,28 +12,27 @@ services:
     environment:
       - PORT=3000
     volumes:
-      - ./src/image-storage/src:./src
+      - ./src/image-storage/:/user/src/app
       # - ./src/image-storage/IMAGE_DB:./IMAGE_DB
       # - ./src/image-storage/ENCR_IMAGE_DB:./ENCR_IMAGE_DB
     restart: "no"
 
   mongo:
     image: mongo
-    container_name: mongo
+    container_name: imongo
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - ./MDB:/data/db:z
+      - ./MDB:/data/db
 
   mongo-express:
-    container_name: mongo-express
+    container_name: imongo-express
     image: mongo-express
-    restart: always
     ports:
       - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_URL:"mongodb://mongo:27017"
+      - ME_CONFIG_MONGODB_URL:"mongodb://imongo:27017"
     depends_on:
       - mongo
   
@@ -46,9 +45,9 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - MONGO_URI:"mongodb://mongo:27017"
+      - MONGO_URI:"mongodb://imongo:27017"
     volumes:
-      - ./src/image-manager:./
+      - ./src/image-manager:/user/src/app
     depends_on:
       - mongo
   
