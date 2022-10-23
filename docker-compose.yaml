@@ -4,16 +4,17 @@ services:
   image-storage:
     image: image-storage
     build: 
-      context: ./image-storage
-      dockerfile: Dockerfile
+      context: ./src/image-storage
+      dockerfile: Dockerfile-dev
     container_name: image-storage
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
     volumes:
-      - ./src/image-storage/IMAGE_DB:./IMAGE_DB:z
-      - ./src/image-storage/ENCR_IMAGE_DB:./ENCR_IMAGE_DB:z
+      - ./src/image-storage/src:./src
+      # - ./src/image-storage/IMAGE_DB:./IMAGE_DB
+      # - ./src/image-storage/ENCR_IMAGE_DB:./ENCR_IMAGE_DB
     restart: "no"
 
   mongo:
@@ -39,9 +40,16 @@ services:
   image-manager:
     container_name: image-manager
     build: 
-      context: ./image-manager
-      dockerfile: Dockerfile
+      context: ./src/image-manager
+      dockerfile: Dockerfile-dev
     restart: "no"
     ports:
       - "3001:3000"
+    environment:
+      - MONGO_URI:"mongodb://mongo:27017"
+    volumes:
+      - ./src/image-manager:./
+    depends_on:
+      - mongo
+  
     
