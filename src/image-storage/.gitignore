@@ -1,3 +1,4 @@
 node_modules
 IMAGE_DB/*
 ENCR_IMAGE_DB/*
+!ENCR_IMAGE_DB/empty
