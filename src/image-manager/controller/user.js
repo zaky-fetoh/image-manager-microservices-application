@@ -77,4 +77,14 @@ exports.deleteUser = async(req, res, next)=>{
     res.status(200).json({
         ok:true, message:"user deleted",
     });
-}
+};
+
+exports.getUser = async(req, res, next)=>{
+    const userId = req.user_id ;
+    const user = userModel.findOne({
+        _id: userId, 
+    }, {__v:0, password:0}); 
+    res.status(200).json({
+        ok:true,data: user,
+    });
+};

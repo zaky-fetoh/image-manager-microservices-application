@@ -15,4 +15,33 @@ services:
       - ./src/image-storage/IMAGE_DB:./IMAGE_DB:z
       - ./src/image-storage/ENCR_IMAGE_DB:./ENCR_IMAGE_DB:z
     restart: "no"
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./MDB:/data/db:z
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_URL:"mongodb://mongo:27017"
+    depends_on:
+      - mongo
+  
+  image-manager:
+    container_name: image-manager
+    build: 
+      context: ./image-manager
+      dockerfile: Dockerfile
+    restart: "no"
+    ports:
+      - "3001:3000"
     

@@ -3,23 +3,30 @@ const express = require("express");
 const morgan = require("morgan");
 mongoose.pluralize(null);
 
+
+const userLogic = require("./controller/user");
+
+
+
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 3000;
 
 
 (async () => {
-    try{await mongoose.connect(MONGO_URI);
-    console.log(`successfully connected to database URI: ${MONGO_URI}`)
-    }catch(e){console.log(`unable to Connect to  URI: ${MONGO_URI}`)}
+    try {
+        await mongoose.connect(MONGO_URI);
+        console.log(`successfully connected to database URI: ${MONGO_URI}`)
+    } catch (e) { console.log(`unable to Connect to  URI: ${MONGO_URI}`) }
 
-    express().use(morgan())
-    .use(express.json(),(req, res, next)=>{
-        req.headers.authorization
-    })
+    express().use(morgan()).use(express.json())
+        .post("/signin", userLogic.signin)
+        .post("/user", userLogic.addUser)
+        .get("/user", userLogic.gard, userLogic.getUser)
+        .put("/user", userLogic.gard, userLogic.updateUser)
+        .delete("/user", userLogic.gard, userLogic.deleteUser)
 
-    
-    .listen(PORT,()=>{
-    console.log(`SERVER is listening at ${PORT}`)
-    })
+        .listen(PORT, () => {
+            console.log(`SERVER is listening at ${PORT}`)
+        })
 
 })();
