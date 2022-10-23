@@ -1,9 +1,11 @@
 const multer = require("multer");
 const uuidv4 = require("uuid").v4;
-const path = require("path");
 const express = require("express")
+const path = require("path");
+const fs = require("fs");
 
-const IMAGE_DB = path.join(__dirname, "..", "..", "IMAGE_DB");
+const IMAGE_DB = path.join(__dirname,"..","..","IMAGE_DB") ; 
+
 
 const diskStroage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -38,3 +40,13 @@ exports.ackWithFileName = (req, res, next) => {
 
 exports.uploadImage = express.Router()
     .use(exports.SaveSingleImage,exports.ackWithFileName)
+
+
+exports.downloadImage = (req, res, next)=>{
+    const imageId = req.params.imageId;
+    const imagePath = path.join(IMAGE_DB,imageId);
+    if(fs.existsSync(imagePath)) return res.sendFile(imagePath);
+    return res.status(404).json({
+        error:"Image Does Not Exist",
+    })
+}
