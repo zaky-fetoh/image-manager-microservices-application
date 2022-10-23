@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
 })
 
 const joiUserSchema = joi.object({
-    _id: joi.any(),
     name: joi.string().min(2).max(20).required(),
     user_name: joi.string().min(3).max(7).required().alphanum(),
     pasword: joi.string().min(7),
+    _id: joi.any(),
 })
 
 userSchema.pre("save", async function (next) {
@@ -40,7 +40,6 @@ userSchema.pre("save", async function (next) {
         this.pasword = await bcrypt.hash(this.pasword, 12);
     next();
 })
-
 
 
 module.exports = new mongoose.model('user', userSchema);
