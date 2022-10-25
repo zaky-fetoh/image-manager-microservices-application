@@ -12,6 +12,11 @@ exports.signin = async (req, res, next) => {
         user_name: user_name,
     }, { __v: 0 });
 
+    if( !dbuser || !user_name || !password)
+        return res.status(404).json({
+            ok:false, message: "Not Found"
+        });
+
     const valid = await bcrypt.compare(password, dbuser.password,);
     if (!valid) return res.status(402).json({
         ok: false, message: "Incorrect Username or password",

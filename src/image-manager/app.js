@@ -29,7 +29,8 @@ const PORT = process.env.PORT || 3000;
         .delete("/user", userLogic.gard, userLogic.deleteUser)
         
         .post("/image/:encrypt", userLogic.gard, imageLogic.addImage)
-
+        .delete("/image/:imageId", userLogic.gard, imageLogic.deleteImage)
+        
         .listen(PORT, () => {
             console.log(`SERVER is listening at ${PORT}`)
         })
