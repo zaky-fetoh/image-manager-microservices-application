@@ -37,6 +37,7 @@ services:
       - mongo
   
   image-manager:
+    image: image-manager
     container_name: image-manager
     build: 
       context: ./src/image-manager
@@ -46,6 +47,8 @@ services:
       - "3001:3000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/IM
+      - IMAGEDISK_HOST=image-storage
+      - IMAGEDISK_PORT=3000
       - PORT=3000
     volumes:
       - ./src/image-manager:/user/src/app

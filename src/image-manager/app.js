@@ -5,7 +5,7 @@ const morgan = require("morgan");
 mongoose.pluralize(null);
 
 const userLogic = require("./controller/user");
-
+const imageLogic = require("./controller/image");
 
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -27,6 +27,8 @@ const PORT = process.env.PORT || 3000;
         .get("/user", userLogic.gard, userLogic.getUser)
         .put("/user", userLogic.gard, userLogic.updateUser)
         .delete("/user", userLogic.gard, userLogic.deleteUser)
+        
+        .post("/image/:encrypt", userLogic.gard, imageLogic.addImage)
 
         .listen(PORT, () => {
             console.log(`SERVER is listening at ${PORT}`)
