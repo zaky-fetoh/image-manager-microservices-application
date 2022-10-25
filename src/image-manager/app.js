@@ -31,6 +31,8 @@ const PORT = process.env.PORT || 3000;
         .post("/image/:encrypt", userLogic.gard, imageLogic.addImage)
         .delete("/image/:imageId", userLogic.gard, imageLogic.deleteImage)
         
+        .get("/view-image/:imageId", userLogic.gard, imageLogic.viewImage)
+
         .listen(PORT, () => {
             console.log(`SERVER is listening at ${PORT}`)
         })

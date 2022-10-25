@@ -94,13 +94,13 @@ exports.viewImage = async (req, res, next) => {
     const imageId = req.params.imageId;
 
     const imDoc = await imageModel.findOne({
-        image_id: imageId,
+        _id: imageId,
     }, { __v: 0 });
 
     if (!imDoc) return res.status(404).json({
         ok: false, message: "image not found",
     })
-    if (user_id !== imDoc.owner) {
+    if (user_id !== imDoc.owner.toString()) {
         imDoc.view_count++;
         setImmediate(async() => await imDoc.save());
     }
