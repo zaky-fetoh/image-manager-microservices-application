@@ -10,11 +10,13 @@ const PORT = process.env.PORT || 3000;
 (async () => {
     express().use(morgan())
     
-    .get("/download/:imageId",plainImageHandler.downloadImage )
-    .post("/upload", plainImageHandler.uploadImage)
+    .get("/plain-image/:imageId",plainImageHandler.downloadImage )
+    .delete("/plain-image/:imageId", plainImageHandler.deleteImage)
+    .post("/plain-image", plainImageHandler.uploadImage)
     
-    .get("/decr-download/:imageId",cipherImageHundler.downloadDecrImage)
-    .post("/encr-upload",cipherImageHundler.uploadEncrImage)
+    .get("/cipher-image/:imageId",cipherImageHundler.downloadDecrImage)
+    .delete("/cipher-image/:imageId", cipherImageHundler.deleteImage)
+    .post("/cipher-image",cipherImageHundler.uploadEncrImage)
 
     .listen(PORT,()=>{
         console.log(`Server Start listening at ${PORT}`)

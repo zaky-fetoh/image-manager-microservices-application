@@ -71,10 +71,21 @@ exports.downloadDecrImage = (req, res, next)=>{
 
 
 
+exports.deleteImage = (req, res, next)=>{
+    const imageId = req.params.imageId;
+    const imagePath = path.join(ENCRDB,imageId); 
 
-
-
-
-
-
-
+    fs.unlink(imagePath,err=>{
+        if(err) return res.status(500).json({
+            ok:false, message:err.message,
+        });
+        fs.unlink(imagePath+".iv",err=>{
+            if(err) return res.status(500).json({
+                ok:false, message:err.message,
+            });
+            res.status(200).json({
+                ok:true, message:`image ${imageId} deleted`,
+            });
+        })
+    })
+};

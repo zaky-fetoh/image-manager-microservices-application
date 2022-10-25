@@ -4,6 +4,7 @@ const express = require("express")
 const path = require("path");
 const fs = require("fs");
 
+
 const IMAGE_DB = path.join(__dirname,"..","..","IMAGE_DB") ; 
 
 //Multer Storage Spicicfication
@@ -54,3 +55,18 @@ exports.downloadImage = (req, res, next)=>{
         error:"Image Does Not Exist",
     })
 };
+
+
+exports.deleteImage = (req, res, next)=>{
+    const imageId = req.params.imageId;
+    const imagePath = path.join(IMAGE_DB,imageId);
+    fs.unlink(imagePath,err=>{
+        if(err) return res.status(500).json({
+            ok:false, message:err.message,
+        });
+        res.status(200).json({
+            ok:true, message:`image ${imageId} deleted`,
+        });
+    })
+
+}
