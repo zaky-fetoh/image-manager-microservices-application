@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-const ImageSchema = new mongoose.Schema({
+const ImageSchema = mongoose.Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
         default: mongoose.Types.ObjectId,

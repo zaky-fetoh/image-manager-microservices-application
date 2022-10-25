@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const joi = require("joi");
 
 
-const userSchema = new mongoose.Schema({
+const userSchema =  mongoose.Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
         default: mongoose.Types.ObjectId,
@@ -42,4 +42,4 @@ userSchema.pre("save", async function (next) {
 })
 
 
-module.exports = new mongoose.model('user', userSchema);
+module.exports =  mongoose.model('user', userSchema);

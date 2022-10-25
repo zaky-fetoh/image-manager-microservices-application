@@ -19,20 +19,20 @@ services:
 
   mongo:
     image: mongo
-    container_name: imongo
-    restart: always
+    container_name: mongo
+    # restart: always
     ports:
-      - "27017:27017"
-    volumes:
-      - ./MDB:/data/db
+      - 27017:27017
+    # volumes:
+    #   - ./MDB:/data/db
 
   mongo-express:
-    container_name: imongo-express
+    container_name: mongo-express
     image: mongo-express
     ports:
       - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_URL:"mongodb://imongo:27017"
+      - ME_CONFIG_MONGODB_URL:"mongodb://mongo:27017/"
     depends_on:
       - mongo
   
@@ -45,9 +45,9 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - MONGO_URI:"mongodb://imongo:27017"
+      - MONGO_URI=mongodb://mongo:27017/IM
+      - PORT=3000
     volumes:
       - ./src/image-manager:/user/src/app
     depends_on:
       - mongo
-  

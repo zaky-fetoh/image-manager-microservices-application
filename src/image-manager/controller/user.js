@@ -7,12 +7,12 @@ const JWT_SECRET = process.env.JWT_SECRET || "my amazing secret";
 
 
 exports.signin = async (req, res, next) => {
-    let { userName, password } = req.body;
-    const dbuser = userModel.findOne({
-        user_name: userName,
+    let { user_name, password } = req.body;
+    const dbuser = await userModel.findOne({
+        user_name: user_name,
     }, { __v: 0 });
 
-    const valid = await bcrypt.compare(password, dbuser.password);
+    const valid = await bcrypt.compare(password, dbuser.password,);
     if (!valid) return res.status(402).json({
         ok: false, message: "Incorrect Username or password",
     });
@@ -50,41 +50,44 @@ exports.addUser = async (req, res, next) => {
     const body = req.body;
     try {
         let user = await userModel.create(body);
-        res.status(200).json({ok: true, user_id: user._id})
+        res.status(200).json({ ok: true, user_id: user._id })
     } catch (e) {
-        res.status(500).json({ok: false, message: e.message,})
+        res.status(500).json({ ok: false, message: e.message, })
     }
 };
 
-exports.updateUser = async(req, res, next)=>{
-    const userId = req.user_id; 
+exports.updateUser = async (req, res, next) => {
+    const userId = req.user_id;
     const user = await userModel.findOne({
-        _id: userId},{__v:0});
-    Object.assign(user, req.body); 
-    try{user.save();}catch(e){res.status(500).json({
-        ok:false, message: e.message,
-    })}
+        _id: userId
+    }, { __v: 0 });
+    Object.assign(user, req.body);
+    try { await user.save(); } catch (e) {
+        res.status(500).json({
+            ok: false, message: e.message,
+        })
+    }
     res.status(200).json({
-        ok:true, message:"user updated",
+        ok: true, message: "user updated",
     })
 };
 
-exports.deleteUser = async(req, res, next)=>{
-    const userId = req.user_id; 
-    userModel.deleteOne({
-        _id : userId, 
+exports.deleteUser = async (req, res, next) => {
+    const userId = req.user_id;
+    await userModel.deleteOne({
+        _id: userId,
     })
     res.status(200).json({
-        ok:true, message:"user deleted",
+        ok: true, message: "user deleted",
     });
 };
 
-exports.getUser = async(req, res, next)=>{
-    const userId = req.user_id ;
-    const user = userModel.findOne({
-        _id: userId, 
-    }, {__v:0, password:0}); 
+exports.getUser = async (req, res, next) => {
+    const userId = req.user_id;
+    const user = await userModel.findOne({
+        _id: userId,
+    }, { __v: 0, password: 0 });
     res.status(200).json({
-        ok:true,data: user,
+        ok: true, data: user,
     });
 };
