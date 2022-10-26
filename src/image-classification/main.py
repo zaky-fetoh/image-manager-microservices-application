@@ -1,14 +1,25 @@
-import PIL.Image as Image
-import requests as req
-import model as model
 import flask
-import io 
 import os
+import controller as cont
 
-#for only developmentest
+#only for developmentest
 os.environ["IMAGEDISK_HOST"] = "localhost"
 os.environ["IMAGEDISK_PORT"] = "3000"
+os.environ["PORT"] =3002 
 
-print( pred ); 
+app = flask.Flask(__name__)
 
-# flask.Flask(__name__).run(debug=True)
+
+@app.route("/resnet/<str:imageId>", methods=["GET"])
+def resnetClassification(imageId):
+    pred = cont.classification.ResnetClassifyImageFromStorage(
+        imageId=imageId)
+    return flask.make_response(flask.jsonify({
+        ok: True, labels: pred,
+    }))
+    
+
+
+if __name__ == "__main__":
+    app.run(port = os.getenv("PORT"),
+            debug=True, host="localhost")
