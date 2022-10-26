@@ -54,3 +54,15 @@ services:
       - ./src/image-manager:/user/src/app
     depends_on:
       - mongo
+
+  # image-classifier:
+  #   image: image-classifier
+  #   container_name: image-classifier
+  #   build:
+  #     context: ./src/image-classification
+  #     dockerfile: Dockerfile-dev
+  #   environment:
+  #     - IMAGEDISK_HOST=image-storage
+  #     - IMAGEDISK_PORT=3000
+  #   volumes:
+  #     - ./src/image-classification:/app
