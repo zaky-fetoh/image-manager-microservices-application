@@ -2,15 +2,17 @@ import torch.utils.data as data
 import torchvision.models as models
 import torchvision.transforms as transforms
 import torch as t
+import os.path as path
 
 class_labels = eval(open("model/imageNetLabel.txt").read())
 
-# resnet = models.resnet18(pretrained=True)
-# resnet_script.save("rescript.pt");
+if not path.exists("rescript.pt"):
+    resnet = models.resnet18(pretrained=True)
+    resnet_script = t.jit.script(resnet)
+    resnet_script.save("rescript.pt");
 resnet_script = t.jit.load("rescript.pt")
 
 preprocess = transforms.Compose([
-    # transforms.ToPILImage,
     transforms.Resize(256),
     transforms.CenterCrop(224),
     transforms.ToTensor(),
