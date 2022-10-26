@@ -47,6 +47,7 @@ services:
       - "3001:3000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/IM
+      - RABBITMQ=amqp://RabbitMQ:5672/
       - IMAGEDISK_HOST=image-storage
       - IMAGEDISK_PORT=3000
       - PORT=3000
@@ -66,3 +67,10 @@ services:
   #     - IMAGEDISK_PORT=3000
   #   volumes:
   #     - ./src/image-classification:/app
+  RabbitQM:
+    container_name: RabbitMQ
+    image: rabbitmq:3.11.2-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always

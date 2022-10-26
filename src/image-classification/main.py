@@ -1,7 +1,7 @@
+import controller as cont
 import flask
 import os
-import controller as cont
-import co
+
 
 # only for developmentest
 os.environ["IMAGEDISK_HOST"] = "localhost"

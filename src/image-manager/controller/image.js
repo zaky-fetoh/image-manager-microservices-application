@@ -114,3 +114,10 @@ exports.viewImage = async (req, res, next) => {
         ires.pipe(res)
     }).end()
 };
+
+
+exports.predictTages = async(imageId)=>{
+    
+
+
+}
