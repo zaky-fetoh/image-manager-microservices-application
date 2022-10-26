@@ -9,6 +9,7 @@ torchvision = "*"
 torchaudio = "*"
 numpy = "*"
 flask = "*"
+pika = "*"
 
 [dev-packages]
 matplotlib = "*"

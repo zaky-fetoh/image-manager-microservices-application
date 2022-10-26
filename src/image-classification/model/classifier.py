@@ -9,7 +9,7 @@ class_labels = eval(open("model/imageNetLabel.txt").read())
 if not path.exists("rescript.pt"):
     resnet = models.resnet18(pretrained=True)
     resnet_script = t.jit.script(resnet)
-    resnet_script.save("rescript.pt");
+    resnet_script.save("rescript.pt")
 resnet_script = t.jit.load("rescript.pt")
 
 preprocess = transforms.Compose([
