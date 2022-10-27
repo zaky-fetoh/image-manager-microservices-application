@@ -1,4 +1,5 @@
 import os, json, pika
+from threading import Thread
 import controller as cont
 MQ_HOST = os.getenv("MQ_HOST")
 MQ_PORT = os.getenv("MQ_PORT")
@@ -14,7 +15,7 @@ channel = conn.channel()
 channel.exchange_declare(MQ_EXCHANGE,exchange_type="direct",
                     )
 
-channel.queue_declare("resnetQ",exclusive=True)
+channel.queue_declare("resnetQ")
 channel.queue_bind("resnetQ",MQ_EXCHANGE,"resnet")
 
 def resnet_consume(ch, method, props, body):
@@ -29,4 +30,4 @@ def resnet_consume(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_consume("resnetQ",resnet_consume)
-channel.start_consuming()
+Thread(target=channel.start_consuming).start()
