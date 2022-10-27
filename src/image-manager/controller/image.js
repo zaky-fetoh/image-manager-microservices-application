@@ -1,5 +1,5 @@
-const http = require("http")
-
+const http = require("http");
+const amqp = require("amqplib");
 
 const imageModel = require("../model/image");
 
@@ -30,6 +30,7 @@ exports.addImage = async (req, res, next) => {
                     owner: user_id,
                     stored_incrypted: encrypt,
                 });
+                exports.predictTages(im._id.toString())
                 return res.status(200).json({
                     image_id: im._id,
                     ok: true,
@@ -117,7 +118,26 @@ exports.viewImage = async (req, res, next) => {
 
 
 exports.predictTages = async(imageId)=>{
+    const imDoc = await imageModel.findOne({
+        _id:imageId,
+    })
+
+    const conn = await amqp.connect(process.env.RABBITMQ);
+    const channel = await conn.createChannel();
+    const exch = await channel.assertExchange(process.env.MQ_EXCHANGE,
+                "direct",{ durable:false});
+    const resq = await channel.assertQueue("",{
+        durable:true,
+    });
+    channel.publish(exch.exchange,"resnet",
+                    Buffer.from(imDoc.image_id+" XX "+ imDoc.stored_incrypted),{
+                        correlationId:imageId,
+                        replyTo: resq.queue,
+                    });
+    await channel.consume(resq.queue,async(msg)=>{
+        body = JSON.parse(msg.content.toString());
+        imDoc.tags = body.labels;
+        await imDoc.save()
+    })
     
-
-
 }

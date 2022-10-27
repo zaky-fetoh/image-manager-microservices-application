@@ -1,4 +1,3 @@
-import controller as cont
 import flask
 import os
 
@@ -9,11 +8,12 @@ os.environ["IMAGEDISK_PORT"] = "3000"
 
 os.environ["MQ_HOST"] = "localhost"
 os.environ["MQ_PORT"] = "5672"
-os.environ["QM_EXCHANGE"] = "deepModel"
+os.environ["MQ_EXCHANGE"] = "deepModel"
 
 
 os.environ["PORT"] = "3002"
 
+import controller as cont
 
 
 app = flask.Flask(__name__)

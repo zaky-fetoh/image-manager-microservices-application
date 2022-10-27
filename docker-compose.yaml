@@ -48,6 +48,7 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/IM
       - RABBITMQ=amqp://RabbitMQ:5672/
+      - MQ_EXCHANGE=deepModel
       - IMAGEDISK_HOST=image-storage
       - IMAGEDISK_PORT=3000
       - PORT=3000
