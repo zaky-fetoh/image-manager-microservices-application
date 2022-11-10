@@ -57,17 +57,18 @@ services:
     depends_on:
       - mongo
 
-  # image-classifier:
-  #   image: image-classifier
-  #   container_name: image-classifier
-  #   build:
-  #     context: ./src/image-classification
-  #     dockerfile: Dockerfile-dev
-  #   environment:
-  #     - IMAGEDISK_HOST=image-storage
-  #     - IMAGEDISK_PORT=3000
-  #   volumes:
-  #     - ./src/image-classification:/app
+  image-classifier:
+    image: image-classifier
+    container_name: image-classifier
+    build:
+      context: ./src/image-classification
+      dockerfile: Dockerfile-dev
+    environment:
+      - IMAGEDISK_HOST=image-storage
+      - IMAGEDISK_PORT=3000
+    volumes:
+      - ./src/image-classification:/app
+
   RabbitQM:
     container_name: RabbitMQ
     image: rabbitmq:3.11.2-management
