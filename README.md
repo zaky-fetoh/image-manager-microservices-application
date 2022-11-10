@@ -19,6 +19,7 @@ this micro-service is responsible for storing the images the users in either pla
 built with: `NodeJS, Express, Multer, and crypto`.
 ### Image-manager micro-service:
 This micro-service is responsible for 1) storing the meta-data, such as Image’s owner and the image Tags, automatically added by Image Classification micro-service, and the total number of views, 2) manage users, users credentials and authentication 3) communicate with Image-Classification microservice using RabbitMQ and With Image-Storage through it’s RESTfull API.
+
 built with: `NodeJS, Express, Mongoose, JWT, bcrypt, amqplib, and Joi`.
 
 
