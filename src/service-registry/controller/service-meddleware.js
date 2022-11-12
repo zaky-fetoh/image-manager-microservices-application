@@ -33,7 +33,7 @@ exports.deleteService = async (req, res, next) => {
     res.status(out.ok ? 200 : 500).json(out);
 };
 
-exports.get = async (req, res, next) => {
+exports.getService = async (req, res, next) => {
     /****************************
      * this Method gets the Services
      * Route : GET /service/:name/:version
