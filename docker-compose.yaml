@@ -56,6 +56,22 @@ services:
       - ./src/image-manager:/user/src/app
     depends_on:
       - mongo
+  
+  service-registry:
+    image: service-registry
+    container_name: service-registry
+    build:
+      context: ./src/service-registry
+      dockerfile: Dockerfile-dev
+    restart: "no"
+    ports:
+      - "4000:3000"
+    environment:
+      - DB_URI=mongodb://localhost:27017/SerReg
+      - ENV=Docker-compose
+      - PORT=3000
+    volumes:
+      - ./src/service-registry:/user/src/app
 
   image-classifier:
     image: image-classifier
