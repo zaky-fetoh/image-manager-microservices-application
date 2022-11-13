@@ -5,8 +5,11 @@ mongoose.pluralize(null);
 
 const srmdl  =require("./controller/service-meddleware");
 
-const DB_URI = process.env.DB_URI || "mongodb://localhost:27017/SerReg";
-const PORT = process.env.PORT || 0 
+if(process.env.ENV) require("dotenv").config();
+
+
+const DB_URI = process.env.DB_URI;
+const PORT = process.env.PORT;
 
 
 (async () => {
@@ -17,11 +20,11 @@ const PORT = process.env.PORT || 0
     } catch (e) {
         console.error("Unable to connect To DB");
         console.error(e.message);
+        process.exit(1);
     }
 
     const app = express();
-    app.use(morgan())
-    .use(express.json())
+    app.use(morgan()).use(express.json())
     .get("/service/:name/:version",srmdl.getService)
     .post("/service/:name/:version/:port", srmdl.addService)
     .delete("/service/:name/:version/:port",srmdl.deleteService);
