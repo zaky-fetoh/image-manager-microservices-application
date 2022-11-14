@@ -11,6 +11,7 @@ const imageLogic = require("./controller/image");
 
 if(!process.env.ENV) require("dotenv").config()
 
+const VERSION = "1.0.0";
 
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 0;
@@ -58,9 +59,8 @@ const registring = async(version, port)=>{
             new cron.CronJob("*/10 * * * * *",
             async( )=>{
                 console.log("Service is regitred with to SR")
-                registring("1.0.0", port);
+                registring(VERSION, port);
             },null,true)
-
         })
 
 })();
