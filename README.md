@@ -22,4 +22,9 @@ This micro-service is responsible for 1) storing the meta-data, such as Image’
 
 built with: `NodeJS, Express, Mongoose, JWT, bcrypt, amqplib, and Joi`.
 
+### Service-Registry micro-service:
+This micro-service is responsible for 1) services Registry: where other micro-services register it's service-name, version, port, and it's hostname.
+2) services discovery: responible for responding with the hastname and port of the required services. 
+every service should periodically renew it's registry as for every registry entry it have max age after which it will be automatically deleted.
 
+built with: `NodeJS, Express, Mongoose, and semver`.
