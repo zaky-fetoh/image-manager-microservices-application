@@ -51,7 +51,10 @@ services:
       - MQ_EXCHANGE=deepModel
       - IMAGEDISK_HOST=image-storage
       - IMAGEDISK_PORT=3000
-      - PORT=3000
+      - PORT=0
+      - SER_REG_HOST=service-registry
+      - SER_REG_PORT=3000
+      - ENV=Docker-compose
     volumes:
       - ./src/image-manager:/user/src/app
     depends_on:
@@ -65,25 +68,25 @@ services:
       dockerfile: Dockerfile-dev
     restart: "no"
     ports:
-      - "4000:3000"
+      - "2222:3000"
     environment:
-      - DB_URI=mongodb://localhost:27017/SerReg
+      - DB_URI=mongodb://mongo:27017/SerReg
       - ENV=Docker-compose
       - PORT=3000
     volumes:
       - ./src/service-registry:/user/src/app
 
-  image-classifier:
-    image: image-classifier
-    container_name: image-classifier
-    build:
-      context: ./src/image-classification
-      dockerfile: Dockerfile-dev
-    environment:
-      - IMAGEDISK_HOST=image-storage
-      - IMAGEDISK_PORT=3000
-    volumes:
-      - ./src/image-classification:/app
+  # image-classifier:
+  #   image: image-classifier
+  #   container_name: image-classifier
+  #   build:
+  #     context: ./src/image-classification
+  #     dockerfile: Dockerfile-dev
+  #   environment:
+  #     - IMAGEDISK_HOST=image-storage
+  #     - IMAGEDISK_PORT=3000
+  #   volumes:
+  #     - ./src/image-classification:/app
 
   RabbitQM:
     container_name: RabbitMQ

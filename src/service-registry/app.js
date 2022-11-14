@@ -5,7 +5,7 @@ mongoose.pluralize(null);
 
 const srmdl  =require("./controller/service-meddleware");
 
-if(process.env.ENV) require("dotenv").config();
+if(!process.env.ENV) require("dotenv").config();
 
 
 const DB_URI = process.env.DB_URI;
