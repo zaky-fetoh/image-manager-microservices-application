@@ -6,9 +6,10 @@ exports.addRoute = async (req, res, next) => {
     /***************************************
      * POST /route
      * this methodAddes route route collection;
-     * itExpects a {service_name, service_version,
+     * itExpects a {service_version,
      * method, route} object
      * outUt: { ok: Boolean, Route_id:ObjectId}
+     * requires Gard to getService Name
      ****************************************/
     req.body.service_name = req.service_name;
     try {
