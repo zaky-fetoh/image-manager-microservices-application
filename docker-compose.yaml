@@ -76,6 +76,23 @@ services:
     volumes:
       - ./src/service-registry:/user/src/app
 
+  route-advertisement:
+    image: route-advertisement
+    container_name: route-advertisement
+    build:
+      context: ./src/route-advertisement
+      dockerfile: Dockerfile-dev
+    restart: "no"
+    ports:
+      - "2223:3000"
+    environment:
+      - DB_URI=mongodb://mongo:27017/RR
+      - ENV=Docker-compose
+      - SER_REG_HOST=service-registry
+      - SER_REG_PORT=3000
+    volumes:
+      - ./src/route-advertisement:/user/src/app
+
   # image-classifier:
   #   image: image-classifier
   #   container_name: image-classifier
