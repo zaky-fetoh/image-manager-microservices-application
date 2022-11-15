@@ -18,7 +18,7 @@ const VERSION = "1.0.0";
 const registring = async(version, port)=>{
     try{
     const sr  = await axios.post(`http://${SR_HOST}:${SR_PORT
-    }/service/image-manager/${version}/${port}`)
+    }/service/route-advertisement/${version}/${port}`)
     if(!sr.data.ok) throw sr.message; 
     }catch(e){console.error(e)}
 }
