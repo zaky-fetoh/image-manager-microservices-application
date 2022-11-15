@@ -34,7 +34,7 @@ exports.authService = async(req, res, next)=>{
     try{const srvName = req.params.srvName;
         const inPass = req.body.password;
         const stPass = (await serviceModel.findOne({
-            name: srvName,
+                    name: srvName,
         },{__v:0})).password; 
         const match = await bcrypt.compare(inPass, stPass);
         if(match) jwt.sign({service_name: srvName},
@@ -43,11 +43,41 @@ exports.authService = async(req, res, next)=>{
                 ok:false, message:err.message});
             res.status(200).json({
                 ok: true, token,
-            });
-        });
+            })});
     }catch(e){
         res.status(400).json({
             ok:false, message: "Service or passwordis wrong",
     })};
 }
 
+exports.gard = async(req, res, next)=>{
+    /******************
+     * verifying the Jwt token is correct and assign 
+     * Service name to the req
+     * assuming jwt token is set in authorization header
+     *****************/
+    const jwtoken = req.headers.authorization.split(" ")[1];
+    jwt.verify(jwtoken,JWT_SECRET,(err, decode)=>{
+        if(err) return res.status(400).json({
+            ok: false, message: "unauthorized", 
+        });
+        req.service_name = decode.service_name;
+        next();
+    })
+}
+
+exports.deleteService = async(req, res, next)=>{
+        /**************************
+         * Route: DELETE /service
+         * this reute requires authrization
+         *************************/
+        const srvName = req.service_name; 
+        try{const dltCount = (await serviceModel.deleteMany({
+            name: srvName,})).deletedCount;
+        res.status(200).json({
+            ok: true, deletedCount: dltCount,
+        })}catch(e){
+            res.status(400).json({
+                ok:false, message: e.message,
+        })};
+}
