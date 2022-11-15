@@ -6,6 +6,9 @@ const routeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         default: mongoose.Types.ObjectId,
     },
+    insertime:{
+        type: Date, default: Date.now
+    },
     service_name:{
         type: String,
         required:true,
