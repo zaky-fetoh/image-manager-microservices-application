@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const axios = require("axios");
 mongoose.pluralize(null);
-const morgan = require("morgan")
+const morgan = require("morgan");
+const cron = require("cron");
 
 if (!process.env.ENV) require("dotenv").config();
 
@@ -19,15 +20,15 @@ const registring = async(version, port)=>{
     try{
     const sr  = await axios.post(`http://${SR_HOST}:${SR_PORT
     }/service/route-advertisement/${version}/${port}`)
-    if(!sr.data.ok) throw sr.message; 
-    }catch(e){console.error(e)}
+    // if(!sr.data.ok) throw sr.message; 
+    }catch(e){console.error("Error Connect To SR")}
 }
 
 
 (async () => {
     try {
         console.log("connecting to DB")
-        mongoose.connect(DB_URI);
+        await mongoose.connect(DB_URI);
         console.log("SUCCESFUllY C0NNECT")
     } catch (e) {
         console.log(`unable to Connect to Database ${DB_URI}`);
@@ -36,12 +37,12 @@ const registring = async(version, port)=>{
     };
     const app = express().use(morgan()).use(express.json())
         .post("/service", serviceLogic.addService)
-        .post("/srv-auth", serviceLogic.authService)
+        .post("/srv-auth/:srvName", serviceLogic.authService)
         .delete("/service", serviceLogic.gard, serviceLogic.deleteService)
         
         .post("/route", serviceLogic.gard, routeLogic.addRoute)
         .delete("/route", serviceLogic.gard, routeLogic.deleteRoute)
-        .get("route",routeLogic.getAllRoutes);
+        .get("/route",routeLogic.getAllRoutes);
 
     const ser = app.listen(0, ()=>{
         const port = ser.address().port; 

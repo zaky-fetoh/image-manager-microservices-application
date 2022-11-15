@@ -30,11 +30,11 @@ const routeSchema = new mongoose.Schema({
     }
 });
 
-routeSchema.pre("save", async(next)=>{
+routeSchema.pre("save", async function(next){
     const roDoc = await module.exports.findOne({
         method: this.method, route: this.route,});
-    if(roDoc) throw new Error("this End Point exist across the entire MSA")
-    next();
+    if(roDoc) throw new Error("this End Point exist across the entire MSA");
+    else next();
 })
 
 

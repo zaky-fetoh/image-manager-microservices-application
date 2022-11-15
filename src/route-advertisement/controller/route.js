@@ -13,13 +13,13 @@ exports.addRoute = async (req, res, next) => {
      ****************************************/
     req.body.service_name = req.service_name;
     try {
-        const routDoc = routeModel.create(req.body);
+        const routDoc = await routeModel.create(req.body);
         res.status(200).json({
             ok: true, route_id: routDoc._id,
         })
         //////////////POST processing is neededfor newly add
     } catch (e) {
-        res.stutus(400).json({
+        res.status(400).json({
             ok: false, message: e.message,
         })
     }
@@ -59,7 +59,7 @@ exports.getAllRoutes = async(req, res, next)=>{
      ****************/
     try{
         const allRoutes = await routeModel.find({},{__v:0})
-        res.status(200).josn({
+        res.status(200).json({
             ok:true, routes: allRoutes
     })}catch(e){
         res.status(500).json({
