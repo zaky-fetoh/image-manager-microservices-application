@@ -9,14 +9,18 @@ const imageLogic = require("./controller/image");
 
 if(!process.env.ENV) require("dotenv").config()
 
-const VERSION = "1.0.0";
 
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 0;
 
-const SER_REG_HOST = process.env.SER_REG_HOST;
-const SER_REG_PORT = process.env.SER_REG_PORT;
+const VERSION = "1.0.0";
+const SERVICE_NAME = "image-manager"
+const SERVICE_PASS = process.env.SER_PASS || "1234"
 
+const Advertiser =require("./controller/route-advertise")
+const advertiser = new Advertiser (
+    SERVICE_NAME, SERVICE_PASS,
+)
 
 
 (async () => {
@@ -41,9 +45,13 @@ const SER_REG_PORT = process.env.SER_REG_PORT;
         
         .get("/view-image/:imageId", userLogic.gard, imageLogic.viewImage)
 
-        const ser = app.listen(PORT, () => {
+        const ser = app.listen(PORT, async() => {
             const port = ser.address().port;
             periodicRegistering(VERSION, port); 
+            await advertiser.registerService_and_authenticate();
+            //Dummy ForTest
+            await advertiser.advertise_route("/user",
+            "GET", VERSION)
 
         })
 

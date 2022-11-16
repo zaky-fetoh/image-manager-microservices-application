@@ -12,8 +12,12 @@ class advertiser{
     }
 
     async authenticate(RA_URI){
-        try{
-            const ra_res = await axios.post(
+        /*******************************
+         * this method authenticate the services 
+         * it sends a request to POST /srv-auth/srvName
+         * then store JWToken to the attribute
+         ***************/
+        try{const ra_res = await axios.post(
                 `${RA_URI}/srv-auth/${this.serviceName}`,{
                     password: this.password,
                 });
@@ -21,10 +25,13 @@ class advertiser{
                 this.Jwtoken = ra_res.data.token
                 return true;
             }else return null;
-            }catch(e){return null}
+        }catch(e){return null}
     }
     
     async _register(RA_URI){
+        /************
+         * this method register the service to RA 
+         */
         try{
         const ra_res = await axios.post(
             `${RA_URI}/service`,{
@@ -35,14 +42,21 @@ class advertiser{
         }catch(e){return null}
     }
     async _isRegisteredToRA(RA_URI){
+        /**********
+         * this method determine if the 
+         */
         try{
             const ra_res = await axios.get(
                 `${RA_URI}/service/${this.serviceName}`);
             return ra_res.data.ok? ra_res.exist : null
-            }catch(e){return null}
+        }catch(e){return null}
     }
 
     async registerService_and_authenticate(){
+        /**********************
+         * it initially dicover the RA from SR  
+         * then methed register service iff not registerd and then authenticate
+         **********/
         try{
         const RA_Addr = (await discover("route-advertisement",
             "1.0.0")).data;
@@ -60,6 +74,9 @@ class advertiser{
     }
 
     async advertise_route(route, method, version){
+        /**********
+         * this method advertise routes to RA
+         */
         try{ const ra_res = (await axios.post(`${this.RA_URI
         }/route`,{route: route, method: method,
              service_version:version},{
@@ -73,3 +90,5 @@ class advertiser{
         };
     }
 }
+
+module.exports = advertiser; 
