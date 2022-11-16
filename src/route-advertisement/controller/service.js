@@ -19,7 +19,7 @@ exports.addService = async (req, res, next) => {
         ok: true, service_id: servDoc._id,
         });
     }catch(e){
-        res.status(200).json({
+        res.status(500).json({
         ok: false, message: e.message,
     })}
 };

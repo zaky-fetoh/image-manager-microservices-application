@@ -46,9 +46,9 @@ const periodicRegistring = async(port)=>{
     };
     const app = express().use(morgan()).use(express.json())
         .post("/service", serviceLogic.addService)
+        .delete("/service", serviceLogic.gard, serviceLogic.deleteService)
         .get("/service/:srvName", serviceLogic.isServiceExist)
         .post("/srv-auth/:srvName", serviceLogic.authService)
-        .delete("/service", serviceLogic.gard, serviceLogic.deleteService)
         
         .post("/route", serviceLogic.gard, routeLogic.addRoute)
         .delete("/route", serviceLogic.gard, routeLogic.deleteRoute)

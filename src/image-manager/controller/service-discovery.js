@@ -16,7 +16,7 @@ exports.discover = async(srvName, srvVersion)=>{
      * RET: null if notExist || {hostname, Port}
      *********/
     try{
-        const target = (await axios(`${SD_URI}/${
+        const target = (await axios.get(`${SD_URI}/${
             srvName}/${srvVersion}`)).data
         return target.ok ? target: null
     }catch(e){
