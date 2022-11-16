@@ -32,6 +32,7 @@ exports.isServiceExist = async(req, res, next)=>{
      * exist: Boolean}
      * Note Does notRequire Garding
      **********/
+    console.log(`REquesting Existance of ${req.params.srvName}`)
     try{const srvName = req.params.srvName; 
         const doc = await serviceModel.findOne({
                  name: srvName,

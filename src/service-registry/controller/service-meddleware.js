@@ -10,8 +10,9 @@ exports.addService = async (req, res, next) => {
     service.name = req.params.name;
     service.version = req.params.version;
     service.port = Number(req.params.port);
-    const ip = req.connection.remoteAddress;
-    service.hostname = ip.includes('::') ? `[${ip}]` : ip;
+    let ip = req.connection.remoteAddress;
+    ip = ip.includes(".") ? ip.replace("::ffff:","") :`${ip}`
+    service.hostname = ip;
     const out = await dbops.addService(service);
     res.status(out.ok ? 200 : 500).json(out)
 };

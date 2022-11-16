@@ -25,7 +25,9 @@ class advertiser{
                 this.Jwtoken = ra_res.data.token
                 return true;
             }else return null;
-        }catch(e){return null}
+        }catch(e){
+            console.error(e.message);
+            return null}
     }
     
     async _register(RA_URI){
@@ -39,17 +41,23 @@ class advertiser{
                 password: this.password,
             });
         return ra_res.data.ok? ra_res : null
-        }catch(e){return null}
+        }catch(e){
+            console.error(e.message);
+            return null}
     }
     async _isRegisteredToRA(RA_URI){
         /**********
          * this method determine if the 
          */
-        try{
+         console.log(`Service Existance ${RA_URI}`)
+         try{
             const ra_res = await axios.get(
                 `${RA_URI}/service/${this.serviceName}`);
+            console.log(`Service Existance ${ra_res}`)
             return ra_res.data.ok? ra_res.exist : null
-        }catch(e){return null}
+        }catch(e){
+            console.error(e.message);
+            return null}
     }
 
     async registerService_and_authenticate(){
@@ -58,8 +66,9 @@ class advertiser{
          * then methed register service iff not registerd and then authenticate
          **********/
         try{
-        const RA_Addr = (await discover("route-advertisement",
-            "1.0.0")).data;
+        const RA_Addr = await discover("route-advertisement",
+            "1.0.0");
+            console.log(RA_Addr)
             this.RA_URI = `http://${RA_Addr.hostname}:${
                 RA_Addr.port}`;
             if(await this._isRegisteredToRA(this.RA_URI)){

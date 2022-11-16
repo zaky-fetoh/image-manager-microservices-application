@@ -6,21 +6,23 @@ mongoose.pluralize(null);
 
 const userLogic = require("./controller/user");
 const imageLogic = require("./controller/image");
+const Advertiser =require("./controller/route-advertise")
+const SD = require("./controller/service-discovery");
 
-if(!process.env.ENV) require("dotenv").config()
+if(!process.env.ENV) require("dotenv").config();
 
 
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 0;
 
 const VERSION = "1.0.0";
-const SERVICE_NAME = "image-manager"
-const SERVICE_PASS = process.env.SER_PASS || "1234"
+const SERVICE_NAME = "image-manager";
+const SERVICE_PASS = process.env.SER_PASS || "1234";
 
-const Advertiser =require("./controller/route-advertise")
+
 const advertiser = new Advertiser (
     SERVICE_NAME, SERVICE_PASS,
-)
+);
 
 
 (async () => {
@@ -47,12 +49,11 @@ const advertiser = new Advertiser (
 
         const ser = app.listen(PORT, async() => {
             const port = ser.address().port;
-            periodicRegistering(VERSION, port); 
+            console.log(`server Start listening at ${port}`)
+            SD.periodicRegistering(VERSION, port); 
             await advertiser.registerService_and_authenticate();
             //Dummy ForTest
             await advertiser.advertise_route("/user",
             "GET", VERSION)
-
         })
-
 })();

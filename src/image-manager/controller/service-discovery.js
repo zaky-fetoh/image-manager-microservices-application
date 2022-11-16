@@ -18,7 +18,8 @@ exports.discover = async(srvName, srvVersion)=>{
     try{
         const target = (await axios.get(`${SD_URI}/${
             srvName}/${srvVersion}`)).data
-        return target.ok ? target: null
+        console.log( `Service found ${target}`)
+        return target.ok ? target: null;
     }catch(e){
         console.error(e.message)
         return null 

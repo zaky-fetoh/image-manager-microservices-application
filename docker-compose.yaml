@@ -59,6 +59,7 @@ services:
       - ./src/image-manager:/user/src/app
     depends_on:
       - mongo
+      - service-registry
   
   service-registry:
     image: service-registry
@@ -75,6 +76,8 @@ services:
       - PORT=3000
     volumes:
       - ./src/service-registry:/user/src/app
+    depends_on:
+      - mongo
 
   route-advertisement:
     image: route-advertisement
@@ -86,12 +89,15 @@ services:
     ports:
       - "2223:3000"
     environment:
-      - DB_URI=mongodb://mongo:27017/RR
+      - MONGO_URI=mongodb://mongo:27017/RR
       - ENV=Docker-compose
       - SER_REG_HOST=service-registry
       - SER_REG_PORT=3000
     volumes:
       - ./src/route-advertisement:/user/src/app
+    depends_on:
+      - mongo
+      - service-registry
 
   # image-classifier:
   #   image: image-classifier
