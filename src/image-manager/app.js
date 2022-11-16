@@ -3,8 +3,6 @@ const express = require("express");
 const morgan = require("morgan");
 mongoose.pluralize(null);
 
-const cron = require("cron"); 
-const axios= require("axios");
 
 const userLogic = require("./controller/user");
 const imageLogic = require("./controller/image");
@@ -21,24 +19,14 @@ const SER_REG_PORT = process.env.SER_REG_PORT;
 
 
 
-const registring = async(version, port)=>{
-    try{
-    const sr  = await axios.post(`http://${SER_REG_HOST}:${SER_REG_PORT
-    }/service/image-manager/${version}/${port}`)
-    if(!sr.data.ok) throw sr.message; 
-    }catch(e){
-        console.error(e);
-    }
-}
-
-
 (async () => {
     try {
         await mongoose.connect(MONGO_URI);
         console.log(`successfully connected to database URI: ${MONGO_URI}`)
     } catch (e) { 
         console.log(`unable to Connect to  URI: ${MONGO_URI}`) 
-        console.log(e.message)
+        console.log(e.message);
+        process.exit(1);
     }
 
     const app =express().use(morgan()).use(express.json());
@@ -54,13 +42,9 @@ const registring = async(version, port)=>{
         .get("/view-image/:imageId", userLogic.gard, imageLogic.viewImage)
 
         const ser = app.listen(PORT, () => {
-            const port = ser.address().port; 
-            console.log(`SERVER is listening at ${port}`)
-            new cron.CronJob("*/10 * * * * *",
-            async( )=>{
-                console.log("Service is regitred with to SR")
-                registring(VERSION, port);
-            },null,true)
+            const port = ser.address().port;
+            periodicRegistering(VERSION, port); 
+
         })
 
 })();

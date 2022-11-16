@@ -24,6 +24,27 @@ exports.addService = async (req, res, next) => {
     })}
 };
 
+exports.isServiceExist = async(req, res, next)=>{
+    /******************
+     * Route:GET /service/:srvName
+     * this Method check whether $srvName exist in
+     * the data base or not it returns {ok: Boolean,
+     * exist: Boolean}
+     * Note Does notRequire Garding
+     **********/
+    try{const srvName = req.params.srvName; 
+        const doc = await serviceModel.findOne({
+                 name: srvName,
+        });
+        res.status(200).json({
+            ok:true, exist: Boolean(doc),
+        });
+    }catch(e){
+        res.status(500).json({
+            ok:false, message: e.message,
+    })}
+};
+
 exports.authService = async(req, res, next)=>{
     /*****************
      * Route: POST /service/:srvName

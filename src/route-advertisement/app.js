@@ -24,6 +24,15 @@ const registring = async(version, port)=>{
     }catch(e){console.error("Error Connect To SR")}
 }
 
+const periodicRegistring = async(port)=>{
+    console.log(`SERVER is listening at ${port}`)
+    new cron.CronJob("*/10 * * * * *",
+    async( )=>{
+        console.log("Service is regitred with to SR")
+        registring(VERSION, port);
+    },null,true)
+}
+
 
 (async () => {
     try {
@@ -37,6 +46,7 @@ const registring = async(version, port)=>{
     };
     const app = express().use(morgan()).use(express.json())
         .post("/service", serviceLogic.addService)
+        .get("/service/:srvName", serviceLogic.isServiceExist)
         .post("/srv-auth/:srvName", serviceLogic.authService)
         .delete("/service", serviceLogic.gard, serviceLogic.deleteService)
         
@@ -46,11 +56,6 @@ const registring = async(version, port)=>{
 
     const ser = app.listen(0, ()=>{
         const port = ser.address().port; 
-        console.log(`SERVER is listening at ${port}`)
-        new cron.CronJob("*/10 * * * * *",
-        async( )=>{
-            console.log("Service is regitred with to SR")
-            registring(VERSION, port);
-        },null,true)
+        periodicRegistring(port);
     })
 })();
