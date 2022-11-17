@@ -1,30 +1,28 @@
 const axios = require("axios");
+const cron = require("cron"); 
+const waitPort = require('wait-port');
 
-const SR_HOST = process.env.SER_REG_HOST;
-const SR_PORT = process.env.SER_REG_PORT;
+const SER_REG_HOST = process.env.SER_REG_HOST;
+const SER_REG_PORT = process.env.SER_REG_PORT;
 
-discURL = `http://${SR_HOST}:${SR_PORT}/service`
+const SD_URI = `http://${SER_REG_HOST}:${SER_REG_PORT}/service`
 
-exports.getServiceURL = async (name, version) => {
-    /******************************
-     * this Method request the Service registry micro-service
-     * to acquire Host and port of the $name with corresponding
-     * $version. 
-     * INPUT: String, //name is the service name
-     * Return {ok:boolean, ... }
-     ******************************/
-    try {
-        const res = await axios.get(
-            `${discURL}/${name}/${version}`);
-        return {
-            ok: true, port: res.data.port,
-            hostname: res.data.hostname,
-            fullname: `http://${res.data.hostname}:${res.data.port}`
-        }
-    } catch (e) {
-        return {
-            ok: false, message: e.message,
-        }
-    };
+exports.discover = async(srvName, srvVersion)=>{
+    /*****************
+     * this method requesting the service registry
+     * to findthe hostname, port of $srvName with a
+     * specific Version of $srvVersion
+     * INP: srvName: service name, srvVersion
+     * RET: null if notExist || {hostname, Port}
+     *********/
+    try{console.log("waiting for SR/SD")
+        await waitPort({host:SER_REG_HOST, port:Number(SER_REG_PORT)});
+        const target = (await axios.get(`${SD_URI}/${
+            srvName}/${srvVersion}`)).data
+        console.log( `Service found ${target}`)
+        return target.ok ? target: null;
+    }catch(e){
+        console.error(e.message)
+        return null 
+    }
 }
-
