@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+if (!process.env.ENV) require("dotenv").config({path:"../"});
 
 
 const plainImageHandler = require("./controller/plain-image-hundler");

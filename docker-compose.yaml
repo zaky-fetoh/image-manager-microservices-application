@@ -11,6 +11,8 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
+      - SER_REG_HOST=service-registry
+      - SER_REG_PORT=3000
     volumes:
       - ./src/image-storage/:/user/src/app
       # - ./src/image-storage/IMAGE_DB:./IMAGE_DB
