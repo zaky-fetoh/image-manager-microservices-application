@@ -1,3 +1,5 @@
+if (!process.env.ENV) require("dotenv").config();
+
 const mongoose = require("mongoose");
 const express = require("express");
 const morgan = require("morgan");
@@ -9,7 +11,6 @@ const imageLogic = require("./controller/image");
 const Advertiser = require("./controller/route-advertise")
 const SD = require("./controller/service-discovery");
 
-if (!process.env.ENV) require("dotenv").config();
 
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -61,7 +62,6 @@ const advertiser = new Advertiser(
         console.log(`server Start listening at ${port}`)
         SD.periodicRegistering(VERSION, port);
         await advertiser.registerService_and_authenticate();
-        //Dummy ForTest
         RoutesToAdvertsise.forEach(async(item)=>{
             const RA_res = await advertiser.advertise_route(item[0],
                 item[1], VERSION);

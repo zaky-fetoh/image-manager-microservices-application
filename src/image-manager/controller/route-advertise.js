@@ -77,7 +77,7 @@ class advertiser {
             console.log(`${RA_Addr} is found`)
             this.RA_URI = `http://${RA_Addr.hostname}:${RA_Addr.port}`;
             console.log("waiting RA service");
-            await waitPort({ host: RA_Addr.hostname, port: RA_Addr.port });
+            await waitPort({ host: RA_Addr.hostname, port: Number(RA_Addr.port) });
             if (await this._isRegisteredToRA(this.RA_URI)) {
                 await this.authenticate(this.RA_URI);
             } else {

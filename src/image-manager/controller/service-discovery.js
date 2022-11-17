@@ -16,7 +16,7 @@ exports.discover = async(srvName, srvVersion)=>{
      * RET: null if notExist || {hostname, Port}
      *********/
     try{console.log("waiting for SR/SD")
-        await waitPort({host:SER_REG_HOST, port:SER_REG_PORT});
+        await waitPort({host:SER_REG_HOST, port:Number(SER_REG_PORT)});
         const target = (await axios.get(`${SD_URI}/${
             srvName}/${srvVersion}`)).data
         console.log( `Service found ${target}`)
@@ -34,11 +34,11 @@ exports.registring = async(version, port)=>{
      * data to {port, version} to service registry
      ****************/
 
-    try{console.log("waiting for SR/SD")
-    await waitPort({host:SER_REG_HOST, port:SER_REG_PORT});
+    try{console.log("waiting for SR/SD");
+    await waitPort({host:SER_REG_HOST, port:Number(SER_REG_PORT)});
     const sr  = await axios.post(`http://${SER_REG_HOST}:${SER_REG_PORT
-    }/service/image-manager/${version}/${port}`)
-    console.log(`Ok statfor registering ${sr.data.ok}`)
+    }/service/image-manager/${version}/${port}`);
+    console.log(`Ok statfor registering ${sr.data.ok}`);
     if(!sr.data.ok) throw sr.message; 
     }catch(e){
         console.error(e);
@@ -46,7 +46,6 @@ exports.registring = async(version, port)=>{
 }
 
 exports.periodicRegistering = async(version, port)=>{
-    console.log(`SERVER is listening at ${port}`)
     new cron.CronJob("*/10 * * * * *",async( )=>{
         console.log("Service is regitred with to SR")
         exports.registring(version, port);
