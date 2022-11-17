@@ -1,6 +1,6 @@
 const axios = require("axios");
 const cron = require("cron"); 
-
+const waitPort = require('wait-port');
 
 const SER_REG_HOST = process.env.SER_REG_HOST;
 const SER_REG_PORT = process.env.SER_REG_PORT;
@@ -15,7 +15,8 @@ exports.discover = async(srvName, srvVersion)=>{
      * INP: srvName: service name, srvVersion
      * RET: null if notExist || {hostname, Port}
      *********/
-    try{
+    try{console.log("waiting for SR/SD")
+        await waitPort({host:SER_REG_HOST, port:SER_REG_PORT});
         const target = (await axios.get(`${SD_URI}/${
             srvName}/${srvVersion}`)).data
         console.log( `Service found ${target}`)
@@ -33,9 +34,11 @@ exports.registring = async(version, port)=>{
      * data to {port, version} to service registry
      ****************/
 
-    try{
+    try{console.log("waiting for SR/SD")
+    await waitPort({host:SER_REG_HOST, port:SER_REG_PORT});
     const sr  = await axios.post(`http://${SER_REG_HOST}:${SER_REG_PORT
     }/service/image-manager/${version}/${port}`)
+    console.log(`Ok statfor registering ${sr.data.ok}`)
     if(!sr.data.ok) throw sr.message; 
     }catch(e){
         console.error(e);
