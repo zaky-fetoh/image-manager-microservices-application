@@ -93,7 +93,8 @@ class advertiser {
         /**********
          * this method advertise routes to RA
          */
-        try {
+        try {console.log(`advertising ${route}, ${
+            method}, ${version}`);
             const ra_res = (await axios.post(`${this.RA_URI
                 }/route`, {
                     route: route, method: method,
