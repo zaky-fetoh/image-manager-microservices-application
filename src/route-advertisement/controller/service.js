@@ -15,6 +15,7 @@ exports.addService = async (req, res, next) => {
     try{const serv = req.body;
         serv.password = await bcrypt.hash(serv.password,12);
         const servDoc = await serviceModel.create(serv);
+        console.log(`Service ${servDoc.name} is added`);
         res.status(200).json({
         ok: true, service_id: servDoc._id,
         });
