@@ -6,7 +6,6 @@ const RUpdater = require("./controller/route_updater")
 const PORT = process.env.PORT;
 
 
-
 (async()=>{
     const app = express();
     const ser = app.listen(PORT,async()=>{

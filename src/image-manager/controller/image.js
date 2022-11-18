@@ -128,6 +128,7 @@ exports.viewImage = async (req, res, next) => {
         host: IS_HOST, port: IS_PORT,
         path: path, headers: req.headers,
     }, ires => {
+        res.writeHeader(ires.statusCode, ires.headers)
         ires.pipe(res)
     }).end()
 };
