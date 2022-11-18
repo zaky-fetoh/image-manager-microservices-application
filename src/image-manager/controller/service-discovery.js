@@ -16,12 +16,14 @@ exports.discover = async(srvName, srvVersion)=>{
      * RET: null if notExist || {hostname, Port}
      *********/
     try{console.log("waiting for SR/SD")
+        console.log({host:SER_REG_HOST, port:Number(SER_REG_PORT)})
         await waitPort({host:SER_REG_HOST, port:Number(SER_REG_PORT)});
         const target = (await axios.get(`${SD_URI}/${
             srvName}/${srvVersion}`)).data
-        console.log( `Service found ${target}`)
+        console.log( `Service found ${JSON.stringify(target)}`)
         return target.ok ? target: null;
     }catch(e){
+        console.error(`service Not found ${srvName}`)
         console.error(e.message)
         return null 
     }

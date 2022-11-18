@@ -1,7 +1,8 @@
 const http = require("http"); 
 const url = require("url");
+const waitPort = require("wait-port");
 
-exports.forward = async(req, res,toEndPoint, method)=>{
+exports.forward = (req, res,toEndPoint, method)=>{
     /************************
      * this method forword the incomming Request $req
      * to the $toEndPoint and it's response to the original
@@ -23,6 +24,7 @@ exports.forward = async(req, res,toEndPoint, method)=>{
         path:dstUrl.pathname,
     });
     try{
+    waitPort({host:dstUrl.hostname, port:Number(dstUrl.port)})
     req.pipe(http.request({
         method: method, 
         hostname: dstUrl.hostname, 
@@ -33,7 +35,8 @@ exports.forward = async(req, res,toEndPoint, method)=>{
         res.writeHeader(dres.statusCode, dres.headers)
         console.log(`startPiping`)
         dres.pipe(res)
-    }))}catch(e){
+    }))
+    }catch(e){
         res.status(500).json({
             ok:false, message: e.message,
         });

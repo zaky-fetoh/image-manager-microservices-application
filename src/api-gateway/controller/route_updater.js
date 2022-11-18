@@ -46,6 +46,7 @@ class RouteUpdater {
             "1.0.0");
         this.RA_URI = `http://${RA_addr.hostname
             }:${RA_addr.port}/route`;
+        await waitPort({host:RA_addr.hostname, port:Number(RA_addr.port)});
         const allRoutes = (await axios.get(this.RA_URI)).data.routes;
         return this.addRoutes(allRoutes)
     }

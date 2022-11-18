@@ -6,9 +6,11 @@ const SD = require("./service-discovery");
 
 
 
+
 const getIS_addr = async () => {
 
         const IS_addr = await SD.discover("image-storage", "1.0.0")
+        console.log(JSON.stringify(IS_addr))
         if (IS_addr) return {
             IS_HOST: IS_addr.hostname,
             IS_PORT: IS_addr.port
@@ -19,7 +21,7 @@ const getIS_addr = async () => {
 // "/image/:encrypt"
 exports.addImage = async (req, res, next) => {
 
-    const { IS_HOST, IS_PORT } = getIS_addr()
+    const { IS_HOST, IS_PORT } = await getIS_addr()
 
     const encrypt = req.params.encrypt === "true";
     const path = (encrypt ? "/cipher" : "/plain") + "-image";
@@ -60,7 +62,7 @@ exports.addImage = async (req, res, next) => {
 // /image/:imageId
 exports.deleteImage = async (req, res, next) => {
 
-    const { IS_HOST, IS_PORT } = getIS_addr()
+    const { IS_HOST, IS_PORT } = await getIS_addr()
 
     const user_id = req.user_id;
     const image_id = req.params.imageId;
@@ -105,9 +107,12 @@ exports.deleteImage = async (req, res, next) => {
 
 // /view-image/:imageId GET
 exports.viewImage = async (req, res, next) => {
-    const { IS_HOST, IS_PORT } = getIS_addr()
+    const { IS_HOST, IS_PORT } = await getIS_addr()
     const user_id = req.user_id;
     const imageId = req.params.imageId;
+
+    console.log(IS_HOST, "   ", IS_PORT)
+
 
     const imDoc = await imageModel.findOne({
         _id: imageId,
@@ -120,7 +125,7 @@ exports.viewImage = async (req, res, next) => {
         imDoc.view_count++;
         setImmediate(async () => await imDoc.save());
     }
-    const encrypt = imDoc.stored_incrypted === "true";
+    const encrypt = String(imDoc.stored_incrypted) === "true";
     const path = (encrypt ? "/cipher" : "/plain") +
         "-image/" + imDoc.image_id;
 
