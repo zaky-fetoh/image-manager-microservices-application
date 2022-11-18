@@ -54,23 +54,19 @@ exports.getAllRoutes = async(req, res, next)=>{
     /****************
      * this MthodReturns all routes registred
      * this methodis expectedto be called by
-     * GW, Route: GET /route
+     * GW, Route: GET /route/:fromDate
      * returns allRoutes
      * newly Started API GW should callthis method
      ****************/
     try{console.log("requesting allRoutes");
-        const allRoutes = await routeModel.find({},{__v:0})
+        const fromDate = req.params.fromDate;
+        const allRoutes = await routeModel.find({
+            insertime:{$gt: fromDate}
+        },{__v:0})
         res.status(200).json({
             ok:true, routes: allRoutes
     })}catch(e){
         res.status(500).json({
         ok:false, message: e.message, 
     })}
-}
-
-exports.getRecent = async(req, res,next)=>{
-    /************************
-     * Running API GW will preiodically Callthis 
-     * end pint to be apdated with all ROuted.
-     */
 }

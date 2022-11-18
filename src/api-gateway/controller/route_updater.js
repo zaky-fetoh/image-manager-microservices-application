@@ -12,18 +12,21 @@ class RouteUpdater {
     }
     addRoutes(routesInfo) {
         const router = express.Router()
+        let maxDate = new Date(0);
         routesInfo.forEach(routeInfo => {
+            if(maxDate < new Date(routeInfo.insertime))
+                maxDate = new Date(routeInfo.insertime);
             const midleware = async (req, res, next) => {
                 try {
                     const SRV_addr = await SD.discover(routeInfo.service_name,
                         routeInfo.service_version);
-                    if(!SRV_addr) throw new Error(`Service ${routeInfo.service_name
-                            } of version ${ routeInfo.service_version
-                            } Not Found`)
+                    if (!SRV_addr) throw new Error(`Service ${routeInfo.service_name
+                        } of version ${routeInfo.service_version
+                        } Not Found`)
                     const SRV_URl = `http://${SRV_addr.hostname
                         }:${SRV_addr.port}${req.originalUrl}`;
                     forward(req, res, SRV_URl, routeInfo.method);
-                }catch(e){
+                } catch (e) {
                     res.status(500).json({
                         message: e.message,
                         ok: false,
@@ -39,17 +42,18 @@ class RouteUpdater {
                 case "DELETE": router.delete(routeInfo.route, midleware); break;
             }
         })
-        return router;
+        return [router, maxDate];
     }
-    async getAllInitialRoutes() {
+    async getAllRoutesFrom(date) {
         const RA_addr = await SD.discover("route-advertisement",
             "1.0.0");
         this.RA_URI = `http://${RA_addr.hostname
-            }:${RA_addr.port}/route`;
-        await waitPort({host:RA_addr.hostname, port:Number(RA_addr.port)});
+            }:${RA_addr.port}/route/${date}`;
+        await waitPort({ host: RA_addr.hostname, port: Number(RA_addr.port) });
         const allRoutes = (await axios.get(this.RA_URI)).data.routes;
         return this.addRoutes(allRoutes)
     }
+
 }
 
 module.exports = RouteUpdater; 
