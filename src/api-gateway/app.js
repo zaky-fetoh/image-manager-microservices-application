@@ -6,10 +6,13 @@ const RUpdater = require("./controller/route_updater")
 const PORT = process.env.PORT;
 
 
+
 (async()=>{
-    const app = express()
+    const app = express();
     const ser = app.listen(PORT,async()=>{
         const RU = new RUpdater(app);
-        RU.getAllInitialRoutes();
+        console.log(`GW is listen to ${PORT}`);
+        const ro = await (RU.getAllInitialRoutes(app));
+        app.use(ro);
     })
 })()

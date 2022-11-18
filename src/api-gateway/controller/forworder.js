@@ -14,14 +14,28 @@ exports.forward = async(req, res,toEndPoint, method)=>{
      * $method parameter specifties HTTP verb to $toEndPoint
      ************************/
     const dstUrl = new url.URL(toEndPoint);
+
+    console.log(`forwarding to ${dstUrl}`)
+
+    console.log({method: method, 
+        hostname: dstUrl.hostname, 
+        port: dstUrl.port,
+        path:dstUrl.pathname,
+    });
+    try{
     req.pipe(http.request({
         method: method, 
         hostname: dstUrl.hostname, 
         port: dstUrl.port,
-        path:dstUrl.path, 
+        path:dstUrl.pathname, 
         headers: req.headers,
     }, dres => {
         res.writeHeader(dres.statusCode, dres.headers)
+        console.log(`startPiping`)
         dres.pipe(res)
-    }))
+    }))}catch(e){
+        res.status(500).json({
+            ok:false, message: e.message,
+        });
+    }
 };

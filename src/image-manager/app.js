@@ -49,6 +49,7 @@ const advertiser = new Advertiser(
         .get("/view-image/:imageId", userLogic.gard, imageLogic.viewImage)
 
     const RoutesToAdvertsise = [
+        ["/signin", "POST"],
         ["/user", "POST"],
         ["/user", "GET"], 
         ["/user", "PUT"], 

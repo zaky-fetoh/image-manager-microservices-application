@@ -1,41 +1,53 @@
 const waitPort = require('wait-port');
 const axios = require("axios");
 const cron = require("cron");
+const express = require("express");
 
 const SD = require("./service-discovery");
 const { forward } = require("./forworder");
 
 class RouteUpdater {
-    constructor(app) {
-        this.app = app;
+    constructor() {
         this.RA_URI = null;
     }
-    addRoute(routeInfo) {
-        let hundler = null
-        switch (routeInfo.method) {
-            case "GET": hundler = this.app.get; break;
-            case "POST": hundler = this.app.post; break;
-            case "PUT": hundler = this.app.put; break;
-            case "DELETE": hundler = this.app.delete; break;
-        }
-        hundler(routeInfo.route, async (req, res, next) => {
-            const SRV_addr = await SD.discover(routeInfo.service_name,
-                service_version);
-            const SRV_URl = `http://${SRV_addr.hostname
-                }:${SRV_addr.port}${routeInfo.route}`;
-            forward(req, res, SRV_URl, routeInfo.method);
+    addRoutes(routesInfo) {
+        const router = express.Router()
+        routesInfo.forEach(routeInfo => {
+            const midleware = async (req, res, next) => {
+                try {
+                    const SRV_addr = await SD.discover(routeInfo.service_name,
+                        routeInfo.service_version);
+                    if(!SRV_addr) throw new Error(`Service ${routeInfo.service_name
+                            } of version ${ routeInfo.service_version
+                            } Not Found`)
+                    const SRV_URl = `http://${SRV_addr.hostname
+                        }:${SRV_addr.port}${req.originalUrl}`;
+                    forward(req, res, SRV_URl, routeInfo.method);
+                }catch(e){
+                    res.status(500).json({
+                        message: e.message,
+                        ok: false,
+                    });
+                }
+            };
+            console.log(`adding route ${routeInfo.route} method ${routeInfo.method
+                } for service ${routeInfo.service_name}`)
+            switch (routeInfo.method) {
+                case "GET": router.get(routeInfo.route, midleware); break;
+                case "POST": router.post(routeInfo.route, midleware); break;
+                case "PUT": router.put(routeInfo.route, midleware); break;
+                case "DELETE": router.delete(routeInfo.route, midleware); break;
+            }
         })
+        return router;
     }
     async getAllInitialRoutes() {
-
         const RA_addr = await SD.discover("route-advertisement",
             "1.0.0");
         this.RA_URI = `http://${RA_addr.hostname
             }:${RA_addr.port}/route`;
-        const allRoutes = (await axios.get(this.RA_URI)).routes;
-        allRoutes.array.forEach(element => {
-            this.addRoute(element);
-        });
+        const allRoutes = (await axios.get(this.RA_URI)).data.routes;
+        return this.addRoutes(allRoutes)
     }
 }
 

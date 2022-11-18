@@ -53,7 +53,7 @@ exports.gard = async (req, res, next) => {
 
 exports.addUser = async (req, res, next) => {
     const body = req.body;
-    try {
+    try {console.log(`adding user ${body.name}`)
         let user = await userModel.create(body);
         res.status(200).json({ ok: true, user_id: user._id })
     } catch (e) {
@@ -88,11 +88,16 @@ exports.deleteUser = async (req, res, next) => {
 };
 
 exports.getUser = async (req, res, next) => {
-    const userId = req.user_id;
+    try{const userId = req.user_id;
     const user = await userModel.findOne({
         _id: userId,
     }, { __v: 0, password: 0 });
     res.status(200).json({
         ok: true, data: user,
-    });
+    });} catch(e){
+        res.status(500).json({
+            message: e.message,
+            ok:false,
+        })
+    }
 };

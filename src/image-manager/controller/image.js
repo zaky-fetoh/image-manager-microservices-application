@@ -7,11 +7,12 @@ const SD = require("./service-discovery");
 
 
 const getIS_addr = async () => {
-    const IS_addr = await SD.discover("image-storage", "1.0.0")
-    if (IS_addr) return {
-        IS_HOST: IS_addr.hostname,
-        IS_PORT: IS_addr.port
-    };else throw new Error('No Image Storage Found');
+
+        const IS_addr = await SD.discover("image-storage", "1.0.0")
+        if (IS_addr) return {
+            IS_HOST: IS_addr.hostname,
+            IS_PORT: IS_addr.port
+        }; else throw new Error('No Image Storage Found');
 }
 
 
