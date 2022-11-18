@@ -45,13 +45,21 @@ class RouteUpdater {
         return [router, maxDate];
     }
     async getAllRoutesFrom(date) {
+        try{
         const RA_addr = await SD.discover("route-advertisement",
             "1.0.0");
         this.RA_URI = `http://${RA_addr.hostname
             }:${RA_addr.port}/route/${date}`;
         await waitPort({ host: RA_addr.hostname, port: Number(RA_addr.port) });
         const allRoutes = (await axios.get(this.RA_URI)).data.routes;
+        console.log(allRoutes)
+        if(allRoutes.length <= 1) return null;
         return this.addRoutes(allRoutes)
+        }catch(e){
+            console.error(`error while Geting Routes`);
+            console.error(e.message)
+            return null;
+        }
     }
 
 }

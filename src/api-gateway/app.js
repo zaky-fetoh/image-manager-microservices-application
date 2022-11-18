@@ -5,20 +5,21 @@ const RUpdater = require("./controller/route_updater")
 
 const PORT = process.env.PORT;
 
-let lastUpdateDate = 0
+let lastUpdateDate = 0;
 
 
-    (async () => {
-        const app = express();
-        const ser = app.listen(PORT, async () => {
-            const RU = new RUpdater(app);
-            console.log(`GW is listen to ${PORT}`);
-            cron.CronJob("*/10 * * * * *", async () => {
-                console.log(`Geting Routes gt ${new Date(lastUpdateDate)}`)
-                const ro = await (RU.getAllInitialRoutes(lastUpdateDate));
-                lastUpdateDate = ro[1];
-                app.use(ro[0]);
-                console.log(`routes updated upto ${new Date(lastUpdateDate)}`)
-            },null, true);
-        })
-    })()
+(async () => {
+    const app = express();
+    const ser = app.listen(PORT, async () => {
+        const RU = new RUpdater();
+        console.log(`GW is listen to ${PORT}`);
+        new cron.CronJob("*/10 * * * * *", async () => {
+            console.log(`Geting Routes gt ${new Date(lastUpdateDate)}`)
+            const ro = await (RU.getAllRoutesFrom(lastUpdateDate));
+            if(ro){
+            lastUpdateDate = ro[1];
+            app.use(ro[0]);
+            console.log(`routes updated upto ${new Date(lastUpdateDate)}`)
+        }}, null, true);
+    })
+})()

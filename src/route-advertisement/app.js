@@ -52,7 +52,7 @@ const periodicRegistring = async(port)=>{
         
         .post("/route", serviceLogic.gard, routeLogic.addRoute)
         .delete("/route", serviceLogic.gard, routeLogic.deleteRoute)
-        .get("/route",routeLogic.getAllRoutes);
+        .get("/route/:fromDate",routeLogic.getAllRoutes);
 
     const ser = app.listen(0, ()=>{
         const port = ser.address().port; 
