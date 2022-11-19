@@ -1,5 +1,5 @@
 # image-maneger-microservices-app
-image maneger microservices application
+image manager microservices application
 ![ProjectDiagram](./diagram.png)
 
 Microservices application for image storage, stored in plain form or encrypted form, with it’s meta data and automatic tagging using Deep learning techniques. 
