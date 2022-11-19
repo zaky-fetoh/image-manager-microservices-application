@@ -33,7 +33,7 @@ built with: `NodeJS, Express, Mongoose, axios, and semver`.
 ### Route-Advertisement micro-service:
 To avoid manually adjust API Gateway to add public route route-advertiment (RA) manages all routes from the entire micro-service application. Any service wants to advertise a specific public route it can HTTP POST this route to RA through it's RESTfull API. RA assumes order of routes does not matter. RA allows dynamically adding routes to the Api Gateway. 
 
-built with: `NodeJS, Express, Mongoose, axios`.
+built with: `NodeJS, Express, Mongoose, axios, and JWT`.
 
 ### Api Gateway micro-service
 Api Gateway (GW) micro-service periodically request new added routes to route-advertisement. Every GW is responsible of keep tracking it's state and request missed routes.
