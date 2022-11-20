@@ -1,4 +1,4 @@
-# image-maneger-microservices-app
+# image-manager-microservices-app
 image manager microservices application
 ![ProjectDiagram](./diagram.png)
 
